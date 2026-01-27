@@ -15,8 +15,17 @@ export const ProfileMenu: FC = () => {
       await dispatch(logoutUser()).unwrap();
       dispatch(clearOrders());
       navigate('/login', { replace: true });
-    } catch (error) {
-      console.error('Ошибка при выходе:', error);
+    } catch (err) {
+      console.error('Ошибка при выходе:', err);
+
+      let errorMessage = 'Ошибка при выходе';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === 'string') {
+        errorMessage = err;
+      }
+
+      alert(errorMessage);
     }
   }, [dispatch, navigate]);
 

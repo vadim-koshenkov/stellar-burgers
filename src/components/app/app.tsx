@@ -13,7 +13,13 @@ import '../../index.css';
 import styles from './app.module.css';
 
 import { AppHeader, IngredientDetails, Modal, OrderInfo } from '@components';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+  useParams
+} from 'react-router-dom';
 import { ProtectedRoute } from '../protected-route/protected-route';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from '../../services/store';
@@ -34,6 +40,37 @@ const App = () => {
 
   const onCloseModal = () => {
     navigate(-1);
+  };
+
+  const formatOrderNumber = (number: string | undefined): string => {
+    if (!number) return '';
+
+    const num = parseInt(number, 10);
+    if (isNaN(num)) return '';
+
+    return `#${num.toString().padStart(6, '0')}`;
+  };
+
+  const ModalWithOrderFeed = () => {
+    const { number } = useParams<{ number: string }>();
+
+    return (
+      <Modal title={formatOrderNumber(number)} onClose={onCloseModal}>
+        <OrderInfo />
+      </Modal>
+    );
+  };
+
+  const ModalWithOrderProfile = () => {
+    const { number } = useParams<{ number: string }>();
+
+    return (
+      <ProtectedRoute>
+        <Modal title={formatOrderNumber(number)} onClose={onCloseModal}>
+          <OrderInfo />
+        </Modal>
+      </ProtectedRoute>
+    );
   };
 
   useEffect(() => {
@@ -87,14 +124,7 @@ const App = () => {
 
       {background && (
         <Routes>
-          <Route
-            path='/feed/:number'
-            element={
-              <Modal title='' onClose={onCloseModal}>
-                <OrderInfo />
-              </Modal>
-            }
-          />
+          <Route path='/feed/:number' element={<ModalWithOrderFeed />} />
           <Route
             path='/ingredients/:id'
             element={
@@ -105,13 +135,7 @@ const App = () => {
           />
           <Route
             path='/profile/orders/:number'
-            element={
-              <ProtectedRoute>
-                <Modal title='' onClose={onCloseModal}>
-                  <OrderInfo />
-                </Modal>
-              </ProtectedRoute>
-            }
+            element={<ModalWithOrderProfile />}
           />
         </Routes>
       )}

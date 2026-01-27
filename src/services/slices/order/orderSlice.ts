@@ -7,6 +7,7 @@ import {
   orderBurgerApi,
   TFeedsResponse
 } from '@api';
+import { clearBurgerConstructor } from '../burgerConstructor/burgerConstructorSlice';
 
 export type TOrderState = {
   feed: TFeedsResponse;
@@ -46,8 +47,11 @@ export const fetchOrderByNumber = createAsyncThunk(
 
 export const createOrder = createAsyncThunk(
   'order/createOrder',
-  async (ingredientsId: string[]) => {
+  async (ingredientsId: string[], { dispatch }) => {
     const response = await orderBurgerApi(ingredientsId);
+
+    dispatch(clearBurgerConstructor());
+
     return response;
   }
 );
@@ -89,8 +93,7 @@ const orderSlice = createSlice({
       })
       .addCase(fetchFeeds.rejected, (state, action) => {
         state.isLoading = false;
-        state.error =
-          (action.error.message as string) || 'Ошибка загрузки ленты заказов';
+        state.error = action.error.message || 'Ошибка загрузки ленты заказов';
       })
       // fetchOrderByNumber
       .addCase(fetchOrderByNumber.pending, (state) => {
@@ -116,10 +119,6 @@ const orderSlice = createSlice({
         state.isLoading = false;
         state.order = action.payload.order;
         state.orderNumber = action.payload.order.number;
-        state.feed.orders = [action.payload.order, ...state.feed.orders];
-        state.feed.total += 1;
-        state.feed.totalToday += 1;
-        state.ordersTape = [action.payload.order, ...state.ordersTape];
       })
       .addCase(createOrder.rejected, (state, action) => {
         state.isLoading = false;

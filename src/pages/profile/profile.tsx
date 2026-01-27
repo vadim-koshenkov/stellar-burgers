@@ -38,9 +38,6 @@ export const Profile: FC = () => {
     e.preventDefault();
     if (!isFormChanged) return;
 
-    setErrorMessage(null);
-    setSuccessMessage(null);
-
     try {
       const updateData: Record<string, string> = {};
 
@@ -63,16 +60,22 @@ export const Profile: FC = () => {
 
       await dispatch(updateUser(updateData)).unwrap();
 
-      dispatch(getUser());
-
       setFormValue((prev) => ({ ...prev, password: '' }));
       setSuccessMessage('Данные успешно обновлены!');
       setIsFormChanged(false);
 
       setTimeout(() => setSuccessMessage(null), 3000);
-    } catch (error: any) {
-      console.error('Ошибка обновления профиля:', error);
-      setErrorMessage(error.message || 'Ошибка обновления данных');
+    } catch (err) {
+      console.error('Ошибка обновления профиля:', err);
+
+      let errorMessage = 'Ошибка обновления данных';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      } else if (typeof err === 'string') {
+        errorMessage = err;
+      }
+
+      setErrorMessage(errorMessage);
       setTimeout(() => setErrorMessage(null), 3000);
     }
   };

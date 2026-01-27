@@ -15,7 +15,6 @@ import {
   selectUser,
   selectIsAuthChecked
 } from '../../services/slices/user/userSlice';
-import { clearBurgerConstructor } from '../../services/slices/burgerConstructor/burgerConstructorSlice';
 
 export const BurgerConstructor: FC = () => {
   const dispatch = useDispatch();
@@ -52,16 +51,24 @@ export const BurgerConstructor: FC = () => {
 
     dispatch(createOrder(ingredientIds))
       .unwrap()
-      .catch((error) => {
-        console.error('Ошибка создания заказа:', error);
-        alert('Ошибка создания заказа. Попробуйте еще раз.');
+      .catch((err) => {
+        console.error('Ошибка создания заказа:', err);
+        let errorMessage = 'Ошибка создания заказа. Попробуйте еще раз.';
+
+        if (err instanceof Error) {
+          errorMessage = err.message;
+        } else if (typeof err === 'string') {
+          errorMessage = err;
+        }
+
+        alert(errorMessage);
       });
   }, [constructorItems, user, orderRequest, dispatch, navigate]);
 
   const closeOrderModal = useCallback(() => {
     dispatch(clearOrder());
+
     if (orderModalData) {
-      dispatch(clearBurgerConstructor());
       dispatch(fetchFeeds());
     }
   }, [dispatch, orderModalData]);

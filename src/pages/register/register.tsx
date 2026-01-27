@@ -44,11 +44,14 @@ export const Register: FC = () => {
       await dispatch(
         registerUser({ name: userName, email, password })
       ).unwrap();
-    } catch (err: any) {
-      setError(
-        err.message ||
-          'Ошибка регистрации. Возможно, пользователь уже существует'
-      );
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else if (typeof err === 'string') {
+        setError(err);
+      } else {
+        setError('Ошибка регистрации. Возможно, пользователь уже существует');
+      }
     }
   };
 

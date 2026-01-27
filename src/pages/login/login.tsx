@@ -39,8 +39,14 @@ export const Login: FC = () => {
 
     try {
       await dispatch(loginUser({ email, password })).unwrap();
-    } catch (err: any) {
-      setError(err.message || 'Ошибка входа. Проверьте email и пароль');
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else if (typeof err === 'string') {
+        setError(err);
+      } else {
+        setError('Ошибка входа. Проверьте email и пароль');
+      }
     }
   };
 

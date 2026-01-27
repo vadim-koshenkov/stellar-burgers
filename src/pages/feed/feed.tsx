@@ -1,7 +1,7 @@
 import { Preloader } from '@ui';
 import { FeedUI } from '@ui-pages';
 import { TOrder } from '@utils-types';
-import { FC, useEffect } from 'react';
+import { FC, useEffect, useCallback } from 'react';
 import { useDispatch, useSelector } from '../../services/store';
 import {
   selectOrders,
@@ -18,9 +18,13 @@ export const Feed: FC = () => {
     dispatch(fetchFeeds());
   }, [dispatch]);
 
-  const handleGetFeeds = () => {
-    dispatch(fetchFeeds());
-  };
+  const handleGetFeeds = useCallback(() => {
+    console.log('Кнопка "Обновить" нажата');
+    dispatch(fetchFeeds())
+      .unwrap()
+      .then(() => console.log('Заказы успешно обновлены'))
+      .catch((error) => console.error('Ошибка обновления:', error));
+  }, [dispatch]);
 
   if (isLoading && !orders.length) {
     return <Preloader />;

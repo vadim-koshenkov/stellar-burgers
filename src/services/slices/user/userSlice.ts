@@ -169,9 +169,14 @@ const userSlice = createSlice({
       .addCase(getUser.rejected, (state, action) => {
         state.isLoading = false;
         state.isAuthChecked = true;
-        state.error =
-          (action.payload as Error)?.message ||
-          'Ошибка получения данных пользователя';
+
+        if (action.payload instanceof Error) {
+          state.error = action.payload.message;
+        } else if (typeof action.payload === 'string') {
+          state.error = action.payload;
+        } else {
+          state.error = 'Ошибка получения данных пользователя';
+        }
       })
       // updateUser
       .addCase(updateUser.pending, (state) => {

@@ -17,18 +17,3 @@
 ## Важно:
 
 Для корректной работы запросов к серверу необходимо добавить переменную BURGER_API_URL в окружение. Сама ссылка находится в файле `.env.example`.
-
-СДЕЛАНО
-1) Слайсы, стор
-2) Протектед роут
-3) app-header
-4) burger-constructor МБ ИСПРАВИТЬ
-5) burger-constructor-element
-6) burger-ingredient
-7) burger-ingredients
-8) feed-info
-9) ingredient-details
-10) ingredients-category
-11) order-card
-12) order-info МБ ИСПРАВИТЬ
-13) profile-menu МБ ИСПРАВИТЬ
