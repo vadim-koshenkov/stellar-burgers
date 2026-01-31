@@ -26,8 +26,12 @@
       "@api": ["src/utils/burger-api.ts"],
       "@slices": ["src/services/slices"],
       "@selectors": ["src/services/selectors"],
-      "@store": ["src/services/store"]
+      "@store": ["src/services/store"],
+      "@utils": ["src/services/utils"]
     }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "exclude": [
+    "src/stories/**/*"
+  ]
 }
